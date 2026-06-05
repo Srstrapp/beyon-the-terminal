@@ -55,7 +55,14 @@ export const portfolioData = {
       ],
       skills: ["Barista Experto", "Chef", "Diseñador (Gods Luck)", "Gestión de Crisis", "Liderazgo en Terreno", "Resolución de Problemas"],
       contactText: "¿Tienes un proyecto o un problema de infraestructura que resolver? Vamos al grano. Escríbeme directamente."
-    }
+    },
+    quotes: [
+      "El único límite es el que te ponés vos mismo. 💪",
+      "Un bug es solo un feature no documentado. 🐛",
+      "Todo sistema complejo que funciona, evolucionó de un sistema simple que funcionaba. 🏗️",
+      "Primero resolvé el problema. Después escribí el código. 🧠",
+      "La paciencia es la clave de todo buen debugeo. 🧘‍♂️"
+    ]
   },
   en: {
     cv_info: {
@@ -113,6 +120,13 @@ export const portfolioData = {
       ],
       skills: ["Expert Barista", "Chef", "Designer (Gods Luck)", "Crisis Management", "Field Leadership", "Problem Solving"],
       contactText: "Do you have a project or infrastructure problem to solve? Let's get straight to the point. Write to me directly."
-    }
+    },
+    quotes: [
+      "The only limit is the one you set yourself. 💪",
+      "A bug is just an undocumented feature. 🐛",
+      "A complex system that works is invariably found to have evolved from a simple system that worked. 🏗️",
+      "First, solve the problem. Then, write the code. 🧠",
+      "Patience is the key to all good debugging. 🧘‍♂️"
+    ]
   }
 };

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes, react/no-unescaped-entities */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppContext } from "@/lib/context";
 import { FileText, Terminal, History, FolderOpen, Play, X } from "lucide-react";
@@ -9,9 +9,15 @@ import { FileText, Terminal, History, FolderOpen, Play, X } from "lucide-react";
 type Tab = "johnny" | "skills" | "experience" | "projects";
 
 export function DevModeView() {
-  const { content } = useAppContext();
+  const { content, language } = useAppContext();
   const [activeTab, setActiveTab] = useState<Tab>("johnny");
   const [openTabs, setOpenTabs] = useState<Tab[]>(["johnny", "skills", "experience", "projects"]);
+
+  // Terminal state
+  const [inputValue, setInputValue] = useState("");
+  const [commandHistory, setCommandHistory] = useState<{cmd: string, output: React.ReactNode}[]>([]);
+  const [nyanCats, setNyanCats] = useState<{id: number}[]>([]);
+  const terminalEndRef = useRef<HTMLDivElement>(null);
 
   const cv = content.cv_info;
 
@@ -44,6 +50,80 @@ export function DevModeView() {
     experience: "Experience.log",
     projects: "Projects.json",
   };
+
+  const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const cmd = inputValue.trim().toLowerCase();
+      let output: React.ReactNode = null;
+      
+      if (cmd === 'nyan') {
+        output = <span className="text-primary neon-glow">Summoning Nyan Cat... 🐱🌈</span>;
+        const id = Date.now();
+        setNyanCats(prev => [...prev, { id }]);
+        setTimeout(() => {
+          setNyanCats(prev => prev.filter(c => c.id !== id));
+        }, 4000); // remove after 4 seconds
+      } else if (cmd === 'clear') {
+        setCommandHistory([]);
+        setInputValue("");
+        return;
+      } else if (cmd === 'ls') {
+        output = <span className="text-secondary">Johnny.js Skills.json Experience.log Projects.json</span>;
+      } else if (cmd === 'whoami') {
+        const msg = language === 'es' ? "¿quién eres tú? ¡no te conozco! 🕵️‍♂️" : "who are you? I don't know you! 🕵️‍♂️";
+        output = <span className="text-error font-bold">{msg}</span>;
+      } else if (cmd === 'motivate') {
+        // @ts-ignore - content is any right now, but it exists
+        const list = content.quotes || [];
+        const randomQuote = list.length > 0 ? list[Math.floor(Math.random() * list.length)] : "Error 404: Motivation not found.";
+        output = <span className="text-secondary italic">"{randomQuote}"</span>;
+      } else if (cmd === 'escuchando' || cmd === 'playing') {
+        output = (
+          <div className="mt-2 mb-2 w-full max-w-md">
+            <span className="text-primary-container block mb-2">♪ Now playing: Lil Supa' - 光 LUZ (Prod. Drama▲Theme)</span>
+            <iframe 
+              src="https://open.spotify.com/embed/track/5aF2hoUHaU9GainPXIZDMV?utm_source=generator&theme=0" 
+              width="100%" 
+              height="152" 
+              frameBorder="0" 
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+              loading="lazy"
+              className="rounded-xl shadow-lg"
+            ></iframe>
+          </div>
+        );
+      } else if (cmd === 'help') {
+        output = (
+          <div className="text-on-surface-variant flex flex-col gap-1">
+            <span className="text-primary font-bold">Available commands:</span>
+            <span><span className="text-tertiary-container">help</span> - Show this message</span>
+            <span><span className="text-tertiary-container">ls</span> - List files</span>
+            <span><span className="text-tertiary-container">whoami</span> - Display current user</span>
+            <span><span className="text-tertiary-container">clear</span> - Clear terminal</span>
+            <span><span className="text-tertiary-container">motivate</span> - Get a random motivational quote</span>
+            <span><span className="text-tertiary-container">escuchando</span> - See what I'm listening to</span>
+            <span><span className="text-tertiary-container">nyan</span> - ???</span>
+          </div>
+        );
+      } else if (cmd !== '') {
+        output = (
+          <div className="flex flex-col gap-1">
+            <span className="text-error">bash: command not found: {cmd}</span>
+            <span className="text-on-surface-variant mt-1">Available commands: <span className="text-tertiary-container">help, ls, whoami, clear, motivate, escuchando, nyan</span></span>
+          </div>
+        );
+      }
+      
+      if (cmd !== '') {
+        setCommandHistory([...commandHistory, { cmd: inputValue, output }]);
+      }
+      setInputValue("");
+    }
+  };
+
+  useEffect(() => {
+    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [commandHistory]);
 
   return (
     <div className="flex h-screen w-full bg-surface-container-lowest overflow-hidden">
@@ -79,6 +159,23 @@ export function DevModeView() {
 
       {/* Main Editor Area */}
       <main className="flex-1 flex flex-col h-full bg-background relative overflow-hidden">
+        {/* Nyan Cat Easter Egg Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-50 overflow-hidden">
+          <AnimatePresence>
+            {nyanCats.map(cat => (
+              <motion.div 
+                key={cat.id}
+                initial={{ x: "-20vw" }}
+                animate={{ x: "110vw" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 4, ease: "linear" }}
+                className="absolute top-1/2 -translate-y-1/2 flex items-center"
+              >
+                <img src="/nyan-cat.gif" alt="Nyan Cat" className="h-48 w-auto object-contain" />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
         {/* Editor Tabs */}
         <div className="h-10 border-b border-outline-variant flex bg-surface-container-low w-full overflow-x-auto custom-scrollbar">
           {openTabs.map((tab) => (
@@ -199,21 +296,48 @@ export function DevModeView() {
             <span className="text-outline-variant">|</span>
             <span>Git Log</span>
           </div>
-          <div className="text-secondary-fixed-dim">
-            <span className="text-primary-container">johnny@macbook</span> <span className="text-on-surface">~/portfolio</span> $ git log --oneline
+          {/* Initial Static History */}
+          {commandHistory.length === 0 && (
+            <>
+              <div className="text-secondary-fixed-dim">
+                <span className="text-primary-container">johnny@macbook</span> <span className="text-on-surface">~/portfolio</span> $ git log --oneline
+              </div>
+              <div className="text-on-surface-variant mt-1">
+                <span className="text-error">a1b2c3d</span> (HEAD -&gt; main) update: {cv.experience.company} - {cv.experience.position}
+              </div>
+              <div className="text-on-surface-variant">
+                <span className="text-error">e4f5g6h</span> feat: Added projects {cv.projects.map(p => p.name).join(', ')}
+              </div>
+              <div className="text-on-surface-variant mb-4">
+                <span className="text-error">i7j8k9l</span> fix: Optimizing queries and full stack workflow
+              </div>
+            </>
+          )}
+
+          {/* Dynamic History */}
+          {commandHistory.map((item, idx) => (
+            <div key={idx} className="mb-2">
+              <div className="text-secondary-fixed-dim">
+                <span className="text-primary-container">johnny@macbook</span> <span className="text-on-surface">~/portfolio</span> $ {item.cmd}
+              </div>
+              {item.output && <div className="text-on-surface-variant mt-1">{item.output}</div>}
+            </div>
+          ))}
+
+          {/* Active Input Line */}
+          <div className="text-secondary-fixed-dim mt-2 flex items-center">
+            <span className="text-primary-container shrink-0">johnny@macbook</span> <span className="text-on-surface mx-2 shrink-0">~/portfolio</span> $ 
+            <input 
+              type="text" 
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleCommand}
+              className="bg-transparent border-none outline-none text-on-surface flex-1 ml-2 font-code-label focus:ring-0"
+              spellCheck={false}
+              autoFocus
+            />
           </div>
-          <div className="text-on-surface-variant mt-1">
-            <span className="text-error">a1b2c3d</span> (HEAD -&gt; main) update: {cv.experience.company} - {cv.experience.position}
-          </div>
-          <div className="text-on-surface-variant">
-            <span className="text-error">e4f5g6h</span> feat: Added projects {cv.projects.map(p => p.name).join(', ')}
-          </div>
-          <div className="text-on-surface-variant">
-            <span className="text-error">i7j8k9l</span> fix: Optimizing queries and full stack workflow
-          </div>
-          <div className="text-secondary-fixed-dim mt-2">
-            <span className="text-primary-container">johnny@macbook</span> <span className="text-on-surface">~/portfolio</span> $ <span className="animate-pulse">_</span>
-          </div>
+          <div ref={terminalEndRef} />
         </div>
       </main>
     </div>
