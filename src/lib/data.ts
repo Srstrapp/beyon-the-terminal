@@ -1,7 +1,7 @@
 export const portfolioData = {
   es: {
     cv_info: {
-      name: "Jhon Frank Mercado (Johnny)",
+      name: "Jhon Mercado (Johnny)",
       role: "Semi-Senior Full Stack Developer",
       philosophy: "Arquitecturas limpias (Clean Code) y despliegues 'Push and Play'.",
       experience: {
@@ -18,6 +18,11 @@ export const portfolioData = {
       education: [
         "Estudiante de Ingeniería de Sistemas (10mo Trimestre) - Universidad Bicentenaria de Aragua",
         "Cursos y formación en: Programación Full Stack, React, Angular, Bases de Datos, Python, DevOps, Arquitectura de Software e Inteligencia Artificial."
+      ],
+      past_jobs: [
+        { company: "Miga's", role: "Subgerente", years: "2019 - 2023", desc: "Escalé desde operario hasta dirigir el restaurante, gestionando personal y operaciones diarias." },
+        { company: "Los Tres Brothers", role: "Mesonero", years: "2018 - 2019", desc: "Atención directa al cliente y manejo de múltiples mesas bajo presión." },
+        { company: "Kim Express", role: "Cocinero", years: "2016 - 2018", desc: "Mi inicio en el mundo real. Manejo de parrilla y cocina rápida." }
       ],
       projects: [
         { 
@@ -48,6 +53,7 @@ export const portfolioData = {
         { title: "Beats Crudos & Graffiti", desc: "Vengo del grafiti y del freestyle, donde con poco haces mucho. Sigo pegado al rap noventero, coleccionando vinilos y soltando beats porque respeto el trabajo hecho a mano. No soy el típico geek en un bucle abstracto." },
         { title: "Hierro & Salitre", desc: "Mi balance está en los extremos: rompiéndome en el gimnasio bajo una disciplina estricta, o manejando hacia la costa para que el mar limpie el ruido del código. Tengo los pies en la tierra, y el cielo es el límite." }
       ],
+      skills: ["Barista Experto", "Chef", "Diseñador (Gods Luck)", "Gestión de Crisis", "Liderazgo en Terreno", "Resolución de Problemas"],
       contactText: "¿Tienes un proyecto o un problema de infraestructura que resolver? Vamos al grano. Escríbeme directamente."
     }
   },
@@ -70,6 +76,11 @@ export const portfolioData = {
       education: [
         "Systems Engineering Student (10th Trimester) - Universidad Bicentenaria de Aragua",
         "Courses and training in: Full Stack Programming, React, Angular, Databases, Python, DevOps, Software Architecture, and AI."
+      ],
+      past_jobs: [
+        { company: "Miga's", role: "Assistant Manager", years: "2019 - 2023", desc: "Climbed from operations to managing the restaurant, overseeing staff and daily operations." },
+        { company: "Los Tres Brothers", role: "Waiter", years: "2018 - 2019", desc: "Direct customer service and handling multiple tables under pressure." },
+        { company: "Kim Express", role: "Line Cook", years: "2016 - 2018", desc: "My start in the real world. Handling the grill and fast-paced cooking." }
       ],
       projects: [
         { 
@@ -100,6 +111,7 @@ export const portfolioData = {
         { title: "Raw Beats & Graffiti", desc: "I come from graffiti and freestyle, where you do a lot with very little. I'm still hooked on 90s rap, collecting vinyls, and dropping beats because I respect handmade work. I am not the typical geek in an abstract loop." },
         { title: "Iron & Saltwater", desc: "My balance is found in extremes: breaking myself in the gym under strict discipline, or driving to the coast to let the sea wash away the noise of code. My feet are on the ground, and the sky is the limit." }
       ],
+      skills: ["Expert Barista", "Chef", "Designer (Gods Luck)", "Crisis Management", "Field Leadership", "Problem Solving"],
       contactText: "Do you have a project or infrastructure problem to solve? Let's get straight to the point. Write to me directly."
     }
   }

@@ -13,10 +13,10 @@ const EditorialSection = ({ index, title, desc, icon: Icon, align = "left", imag
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const cardY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
-  // Fade in earlier (0.1) instead of 0.3 to prevent massive empty spaces
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const cardY = useTransform(scrollYProgress, [0, 1], [-25, 25]);
+  // Fade in much earlier to avoid blank space
+  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0.3, 1, 1, 0.3]);
 
   const isLeft = align === "left";
 
@@ -38,11 +38,11 @@ const EditorialSection = ({ index, title, desc, icon: Icon, align = "left", imag
         {/* Subtle noise texture over gradient */}
         <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         
-        {/* Unsplash Image that fades in on hover */}
+        {/* Unsplash Image */}
         <img 
           src={imageSrc} 
           alt={title}
-          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-40 mix-blend-luminosity transition-all duration-700 scale-105 group-hover:scale-100"
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-105"
         />
 
         {/* Top Right Icon from original Bento */}
@@ -73,12 +73,6 @@ const EditorialSection = ({ index, title, desc, icon: Icon, align = "left", imag
         <p className="font-ui-sans text-lg md:text-xl text-[#444] leading-relaxed max-w-xl font-light">
           {desc}
         </p>
-        <div className="mt-12">
-          <button className="group flex items-center gap-4 font-ui-label text-xs uppercase tracking-[0.2em] pb-2 border-b border-black text-[#111] hover:opacity-70 transition-all">
-            <span>Discover</span>
-            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-2 transition-transform duration-300" />
-          </button>
-        </div>
       </motion.div>
     </motion.div>
   );
@@ -190,11 +184,11 @@ export function HumanModeView() {
 
           <motion.div 
             id="bio"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1 }}
-            className="mt-32 grid grid-cols-1 md:grid-cols-12 gap-12 items-start max-w-6xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px" }}
+            transition={{ duration: 0.8 }}
+            className="mt-20 md:mt-32 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start max-w-6xl mx-auto"
           >
             <div className="md:col-span-6">
               <p className="font-ui-sans text-xl md:text-3xl leading-relaxed font-light text-[#333] first-letter:text-8xl first-letter:font-playfair first-letter:mr-4 first-letter:float-left first-letter:text-black">
@@ -228,6 +222,43 @@ export function HumanModeView() {
               />
             ))}
           </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="mt-32 pt-24 border-t border-black/10 grid grid-cols-1 md:grid-cols-12 gap-12"
+          >
+            <div className="md:col-span-5">
+              <h3 className="font-playfair text-4xl md:text-5xl font-bold mb-8 text-[#111]">
+                {language === "es" ? "Educación." : "Education."}
+              </h3>
+              <div className="space-y-6">
+                {cv.education.map((ed: string, idx: number) => (
+                  <p key={idx} className="font-ui-sans text-lg text-[#666] leading-relaxed">
+                    {ed}
+                  </p>
+                ))}
+              </div>
+            </div>
+            
+            <div className="md:col-span-6 md:col-start-7">
+              <h3 className="font-playfair text-4xl md:text-5xl font-bold mb-8 text-[#111]">
+                {language === "es" ? "Habilidades Humanas." : "Human Skills."}
+              </h3>
+              <div className="flex flex-wrap gap-4">
+                {h.skills.map((skill: string, idx: number) => (
+                  <span 
+                    key={idx} 
+                    className="px-6 py-3 border border-black/20 rounded-full font-ui-label text-xs uppercase tracking-widest text-[#333] hover:bg-black hover:text-white transition-colors cursor-default"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         {/* --- SECTION: TRABAJO --- */}
@@ -258,23 +289,28 @@ export function HumanModeView() {
             </div>
 
             <div className="md:col-span-6 md:col-start-7 flex flex-col gap-24 mt-12 md:mt-0">
-              {cv.projects.map((proj: any, idx: number) => (
+              {cv.past_jobs.map((job: any, idx: number) => (
                 <motion.div 
-                  key={proj.id}
+                  key={idx}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
+                  viewport={{ once: true, margin: "0px" }}
                   transition={{ duration: 0.8 }}
                   className="group"
                 >
-                  <div className="text-[6rem] font-playfair font-black text-black/[0.05] leading-none mb-4">
-                    0{idx + 1}
+                  <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-2">
+                    <h3 className="font-playfair text-4xl md:text-5xl font-bold text-[#111]">
+                      {job.company}
+                    </h3>
+                    <span className="font-ui-label text-xs uppercase tracking-[0.2em] text-[#888] mt-4 md:mt-0">
+                      {job.years}
+                    </span>
                   </div>
-                  <h3 className="font-playfair text-4xl md:text-5xl font-bold text-[#111] mb-6">
-                    {proj.name}
-                  </h3>
+                  <h4 className="font-ui-sans text-xl font-medium text-[#333] mb-4">
+                    {job.role}
+                  </h4>
                   <p className="font-ui-sans text-[#555] text-lg leading-relaxed font-light">
-                    {proj.desc}
+                    {job.desc}
                   </p>
                   <div className="mt-8 h-[1px] w-full bg-black/10 group-hover:bg-black/40 transition-colors duration-500" />
                 </motion.div>
