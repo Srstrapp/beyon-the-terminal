@@ -78,12 +78,21 @@ export function DevModeView() {
         const randomQuote = list.length > 0 ? list[Math.floor(Math.random() * list.length)] : "Error 404: Motivation not found.";
         output = <span className="text-secondary italic">"{randomQuote}"</span>;
       } else if (cmd === 'escuchando' || cmd === 'playing') {
+        const tracks = [
+          { id: '5aF2hoUHaU9GainPXIZDMV', name: "Lil Supa' - 光 LUZ" },
+          { id: '6psVBDz2XlXdfInmWd3pic', name: "Estresado" },
+          { id: '6v65QeSN24Bbk7QWQNASdq', name: "A Veces" },
+          { id: '4Dbjp9NwMitzE8fxFrDJRD', name: "50 Cent - In Da Club" },
+          { id: '5iTyKHHx9efbjrOXPP48gG', name: "Got My Mind Made Up - Method Man" },
+          { id: '5Tbpp3OLLClPJF8t1DmrFD', name: "Dr. Dre, Snoop Dogg - Nuthin' But A \"G\" Thang" }
+        ];
+        const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
         output = (
           <div className="mt-2 mb-2 w-full max-w-md">
-            <span className="text-primary-container block mb-2">♪ Now playing: Lil Supa' - 光 LUZ (Prod. Drama▲Theme)</span>
+            <span className="text-primary-container block mb-2">♪ Now playing: {randomTrack.name}</span>
             <iframe 
-              src="https://open.spotify.com/embed/track/5aF2hoUHaU9GainPXIZDMV?utm_source=generator&theme=0" 
-              width="100%" 
+              src={`https://open.spotify.com/embed/track/${randomTrack.id}?utm_source=generator&theme=0`}
+              width="80%" 
               height="152" 
               frameBorder="0" 
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
